@@ -41,6 +41,9 @@ app.get("/book/:id",async (request,response)=>{
     try {
         const {id}=request.params;
         const book=await Book.findById(id);
+        if(!book){
+            return response.status(400).send({message : "Book not found!"})
+        }
         return response.status(400).send(book);
     }
     catch(error){
@@ -65,6 +68,20 @@ app.put("/book/:id",async (request,response)=>{
         return response.status(400).send({message : `Book ${id} Details Updated Successfully`});
     }
     catch(error) {
+        console.log(error);
+        return response.status(500).send({message : error.message});
+    }
+});
+app.delete("/book/:id",async (request,response)=>{
+    try{
+        const {id}=request.params;
+        const book=await Book.findByIdAndDelete(id);
+        if(!book){
+            return response.status(400).send({message : "Book not found!"});
+        }
+        return response.status(400).send({message : `Book with ID : ${id} Deleted Successfully`});
+    }   
+    catch(error){
         console.log(error);
         return response.status(500).send({message : error.message});
     }
